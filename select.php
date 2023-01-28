@@ -28,7 +28,7 @@ class Select {
         if(is_string($select->other)) {
             $sql = $sql . " `$select->other` ";
         } else {
-            $sql = $sql . $select->_Select($select->other);
+            $sql = $sql . Select::GetSqlFragment($select->other);
         }
         return $sql;
     }
@@ -62,17 +62,17 @@ class Select {
             }
         }
     }
-    private function _Select($other) {
+    public static function GetSqlFragment($other) {
         $keyword = get_class($other);
         if($keyword == 'AsModel') {
             $sql = " `$other->Table` $other->Alias ";
             if(isset($other->Other)) {
-                $sql = $sql  . _Select($other->Other);
+                $sql = $sql  . Select::GetSqlFragment($other->Other);
             }
         } else if($keyword == 'Join') {
-            $sql = $this->_Select($other->LeftAs) . ' JOIN ';
+            $sql = Select::GetSqlFragment($other->LeftAs) . ' JOIN ';
             if(get_class($other->RightAs) == 'AsModel') {
-                $sql = $sql . $this->_Select($other->RightAs);
+                $sql = $sql . Select::GetSqlFragment($other->RightAs);
                 $sql = $sql . ' ON ' . $other->JoinFields;
             } else if(get_class($other->RightAs) == 'Select') {
                 $innerSql = $this->GetSql($other->RightAs);
@@ -83,31 +83,31 @@ class Select {
         } else if($keyword == 'Where') {
             $sql = '';
             if(isset($other->Other)) {
-                $sql = $this->_Select($other->Other);
+                $sql = Select::GetSqlFragment($other->Other);
             }
             return "$sql WHERE $other->Conditions ";
         } else if($keyword == 'Group') {
             $sql = '';
             if(isset($other->Other)) {
-                $sql = $this->_Select($other->Other);
+                $sql = Select::GetSqlFragment($other->Other);
             }
             return "$sql GROUP BY $other->Fields";
         } else if($keyword == 'Having') {
             $sql = '';
             if(isset($other->Other)) {
-                $sql = $this->_Select($other->Other);
+                $sql = Select::GetSqlFragment($other->Other);
             }
             return "$sql HAVING $other->Conditions ";
         } else if($keyword == 'Limit') {
             $sql = '';
             if(isset($other->Other)) {
-                $sql = $this->_Select($other->Other);
+                $sql = Select::GetSqlFragment($other->Other);
             }
             return "$sql LIMIT $other->Offset, $other->Rows";
         } else if($keyword == 'Order') {
             $sql = '';
             if(isset($other->Other)) {
-                $sql = $this->_Select($other->Other);
+                $sql = Select::GetSqlFragment($other->Other);
             }
             return "$sql ORDER BY $other->Fields";
         }

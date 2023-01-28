@@ -24,5 +24,17 @@
             $order->Other = $this;
             return $order;
         }
+        public function Update($data) {
+            $class = get_called_class();
+            $db = DAL::getConnection($class);
+            $sql = "UPDATE `$class` SET ";
+            $fields = array();
+            foreach($data as $key => $value) {
+                $fields[] = "`$key` = '$value'";
+            }
+            $sql = $sql . implode(',', $fields);
+            $sql = $sql . Select::GetSqlFragment($this);
+            $db->query($sql);
+        }
     }
 ?>

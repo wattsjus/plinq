@@ -62,12 +62,16 @@ class DataModel {
             $fields[] = "`$key` = '$value'";
         }
         $sql = $sql . implode(',', $fields);
-        $sql = $sql . " WHERE ";
-        $wheres = array();
-        foreach($conditions as $key=> $value) {
-            $wheres[] = "`$key` = '$value'";
+        if(is_string($conditions)) {
+            $sql = $sql . " WHERE ";
+            $wheres = array();
+            foreach($conditions as $key=> $value) {
+                $wheres[] = "`$key` = '$value'";
+            }
+            $sql = $sql . implode(',', $wheres);
+        } else if($class == 'Where') {
+            $sql = $sql . Select::GetSqlFragment($conditions);
         }
-        $sql = $sql . implode(',', $wheres);
         $db->query($sql);
     }
     public static function Select($fields) {
