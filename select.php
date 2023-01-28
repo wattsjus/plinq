@@ -35,7 +35,8 @@ class Select {
     function ToArray() {
         $sql = $this->GetSql($this);
         $table = $this->_GetFirstTable($this->other);
-        $db = DAL::getConnection($table);
+        global $dal;
+        $db = $dal->getConnection($table);
         $result = $db->query($sql)->fetch_all(MYSQLI_ASSOC);
         $return = array();
         foreach($result as $key => $val) {

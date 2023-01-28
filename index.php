@@ -1,26 +1,28 @@
 <?php
     require_once(__DIR__.'/data-model.php');
     class DAL {
-        private static $connections = array();
-        private static $maps = array();
-        public static function addConnection($name, $server, $username, $password, $dbName) {
-            DAL::$connections[$name] = new mysqli($server,$username,$password,$dbName);
+        private $connections = array();
+        private $maps = array();
+        public function addConnection($name, $server, $username, $password, $dbName) {
+            $this->connections[$name] = new mysqli($server,$username,$password,$dbName);
         }
-        public static function mapToConnection($class, $connection) {
-            DAL::$maps[$class] = $connection;
+        public function mapToConnection($class, $connection) {
+            $this->maps[$class] = $connection;
         }
-        public static function getConnection($class) {
-            $connectionName = DAL::$maps[$class];
-            $connection = DAL::$connections[$connectionName];
+        public function getConnection($class) {
+            $connectionName = $this->maps[$class];
+            $connection = $this->connections[$connectionName];
             return $connection;
         }
-        public static function isFound($class) {
-            return array_key_exists($class, DAL::$maps);
+        public function isFound($class) {
+            return array_key_exists($class, $this->maps);
         }
     }
+    $dal = new DAL();
     spl_autoload_register(function ($class_name) {
         {
-            if(DAL::isFound($class_name)) {
+            global $dal;
+            if($dal->isFound($class_name)) {
                 $class = "class $class_name extends DataModel {}";
                 eval($class);
             }

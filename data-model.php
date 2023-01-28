@@ -40,7 +40,8 @@ class DataModel {
     }
     public static function Insert($data) {
         $class = get_called_class();
-        $db = DAL::getConnection($class);
+        global $dal;
+        $db = $dal->getConnection($class);
         $fields = array();
         $values = array();
         foreach($data as $key => $value) {
@@ -55,7 +56,8 @@ class DataModel {
     }
     public static function Update($conditions, $data) {
         $class = get_called_class();
-        $db = DAL::getConnection($class);
+        global $dal;
+        $db = $dal->getConnection($class);
         $sql = "UPDATE `$class` SET ";
         $fields = array();
         foreach($data as $key => $value) {

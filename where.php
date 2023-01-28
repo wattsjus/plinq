@@ -26,7 +26,7 @@
         }
         public function Update($data) {
             $class = get_called_class();
-            $db = DAL::getConnection($class);
+            $db = $dal->getConnection($class);
             $sql = "UPDATE `$class` SET ";
             $fields = array();
             foreach($data as $key => $value) {
