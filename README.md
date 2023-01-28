@@ -4,9 +4,9 @@ The goal of this qLinq project is to create a data access library that mimics Li
 to start using this library you'll want a database in which pLink can access.  To add these tables to pLink follow this pattern:
 
     require_once("../private/dal/index.php");
-    DAL::addConnection('{name of connection}', '{server}','{username}','{password}','{database}');
-    DAL::mapToConnection('{table name}', '{name of connection}');
-    DAL::mapToConnection('Example', '{name of connection}');    
+    $dal->addConnection('{name of connection}', '{server}','{username}','{password}','{database}');
+    $dal->mapToConnection('{table name}', '{name of connection}');
+    $dal->mapToConnection('Example', '{name of connection}');    
 
 Now you can use the code just like linq in C#:
 
@@ -37,3 +37,19 @@ For a single record the data access can be made like this:
               ::Where("`Name` LIKE '%Foo%'")
               ->Select('*')
               ->FirstOrDefault();
+
+To insert a record:
+
+    $id = Example::Insert(array("Name"=>"Test","OtherData"=>"None"));
+
+To update a record:
+
+    Example::Where('ID = 1')->Update(array("OtherData"=>"Updated"));
+OR
+    Example::Update(Example::Where('ID = 1), array("OtherData"=>"Updated"));
+
+With the last example the where statement could be used to get the data after the record is saved like so:
+
+    $select = $Example::Where('ID = 1');
+    Example::Update($select, array("OtherData"=>"Updated));
+    $example = $select->FirstOrDefault();
