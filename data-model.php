@@ -38,6 +38,38 @@ class DataModel {
         $group = $fields;
         return $group;
     }
+    public static function Insert($data) {
+        $class = get_called_class();
+        $db = DAL::getConnection($class);
+        $fields = array();
+        $values = array();
+        foreach($data as $key => $value) {
+            $fields[] = "`$key`";
+            $values[] = "'$value'";
+        }
+        $fields = implode(',',$fields);
+        $values = implode(',',$values);
+        $sql = "INSERT INTO `$class` ($fields) VALUES ($values)";
+        $db->query($sql);
+        return $db->insert_id;
+    }
+    public static function Update($conditions, $data) {
+        $class = get_called_class();
+        $db = DAL::getConnection($class);
+        $sql = "UPDATE `$class` SET ";
+        $fields = array();
+        foreach($data as $key => $value) {
+            $fields[] = "`$key` = '$value'";
+        }
+        $sql = $sql . implode(',', $fields);
+        $sql = $sql . " WHERE ";
+        $wheres = array();
+        foreach($conditions as $key=> $value) {
+            $wheres[] = "`$key` = '$value'";
+        }
+        $sql = $sql . implode(',', $wheres);
+        $db->query($sql);
+    }
     public static function Select($fields) {
         return new Select(get_called_class(), $fields);
     }
