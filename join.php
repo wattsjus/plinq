@@ -10,7 +10,7 @@
             $where->Conditions = $conditions;
             return $where;
         }
-        public function Join($toJoin, $joinFields, $joinAlias) {
+        public function Join($toJoin, $joinFields, $joinAlias = null) {
             $join = new Join();
             $join->LeftAs = $this;
             $join->RightAs = $toJoin;

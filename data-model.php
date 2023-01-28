@@ -1,12 +1,12 @@
 <?php
-include_once('as.php');
-include_once('group.php');
-include_once('having.php');
-include_once('join.php');
-include_once('where.php');
-include_once('select.php');
-include_once('limit.php');
-include_once('order.php');
+include_once(__DIR__.'/as.php');
+include_once(__DIR__.'/group.php');
+include_once(__DIR__.'/having.php');
+include_once(__DIR__.'/join.php');
+include_once(__DIR__.'/where.php');
+include_once(__DIR__.'/select.php');
+include_once(__DIR__.'/limit.php');
+include_once(__DIR__.'/order.php');
 class DataModel {
     public static function As($alias = null) {
         $as1 = new AsModel();
@@ -14,11 +14,12 @@ class DataModel {
         $as1->Alias = $alias;
         return $as1;
     }
-    public static function Join($toJoin, $joinFields) {
+    public static function Join($toJoin, $joinFields, $joinAlias = null) {
         $join = new Join();
         $join->LeftAs = DataModel::As();
         $join->RightAs = $toJoin;
         $join->JoinFields = $joinFeilds;
+        $join->JoinAlias = $joinAlias;
         return $join;
     }
     public static function Where($conditions) {

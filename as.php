@@ -2,7 +2,7 @@
     class AsModel {
         public $Table;
         public $Alias;
-        public function Join($other, $fields, $joinAlias) {
+        public function Join($other, $fields, $joinAlias = null) {
             $join = new Join();
             $join->RightAs = $other;
             $join->LeftAs = $this;

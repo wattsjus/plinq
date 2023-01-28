@@ -9,7 +9,7 @@ class Select {
     }
     function FirstOrDefault() {
         $limit = new Limit();
-        $limit->Other = $this->Other;
+        $limit->Other = $this->other;
         $limit->Rows = 1;
         $limit->Offset = 0;
         $this->Other = $limit;

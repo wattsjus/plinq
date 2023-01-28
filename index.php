@@ -1,5 +1,5 @@
 <?php
-    require_once('data-model.php');
+    require_once(__DIR__.'/data-model.php');
     class DAL {
         private static $connections = array();
         private static $maps = array();
