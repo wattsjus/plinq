@@ -25,7 +25,8 @@
             return $order;
         }
         public function Update($data) {
-            $class = get_called_class();
+            $class = Select::GetFirstTable($this);
+            global $dal;
             $db = $dal->getConnection($class);
             $sql = "UPDATE `$class` SET ";
             $fields = array();
@@ -33,7 +34,7 @@
                 $fields[] = "`$key` = '$value'";
             }
             $sql = $sql . implode(',', $fields);
-            $sql = $sql . Select::GetSqlFragment($this);
+            $sql = $sql . Select::GetSqlFragment($this, true);
             $db->query($sql);
         }
     }

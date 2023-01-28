@@ -34,7 +34,7 @@ class Select {
     }
     function ToArray() {
         $sql = $this->GetSql($this);
-        $table = $this->_GetFirstTable($this->other);
+        $table = Select::GetFirstTable($this->other);
         global $dal;
         $db = $dal->getConnection($table);
         $result = $db->query($sql)->fetch_all(MYSQLI_ASSOC);
@@ -44,7 +44,7 @@ class Select {
         }
         return $return;
     }
-    private function _GetFirstTable($other) {
+    public static function GetFirstTable($other) {
         if(is_string($other)) {
             return $other;
         } else {
@@ -52,18 +52,18 @@ class Select {
             if($keyword == 'AsModel') {
                 return $other->Table;
             } else if($keyword == 'Join') {
-                return $this->_GetFirstTable($other->LeftAs);
+                return Select::GetFirstTable($other->LeftAs);
             } else if($keyword == 'Where'
                 || $keyword == 'Group'
                 || $keyword == 'Having'
                 || $keyword == 'Limit'
                 || $keyword == 'Order'
                 || $keyword == 'Select') {
-                return $this->_GetFirstTable($other->Other);
+                return Select::GetFirstTable($other->Other);
             }
         }
     }
-    public static function GetSqlFragment($other) {
+    public static function GetSqlFragment($other, $ignoreOther = false) {
         $keyword = get_class($other);
         if($keyword == 'AsModel') {
             $sql = " `$other->Table` $other->Alias ";
@@ -83,7 +83,8 @@ class Select {
             }
         } else if($keyword == 'Where') {
             $sql = '';
-            if(isset($other->Other)) {
+            if(!$ignoreOther
+                && isset($other->Other)) {
                 $sql = Select::GetSqlFragment($other->Other);
             }
             return "$sql WHERE $other->Conditions ";
