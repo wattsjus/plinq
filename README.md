@@ -45,7 +45,9 @@ To insert a record:
 To update a record:
 
     Example::Where('ID = 1')->Update(array("OtherData"=>"Updated"));
+
 OR
+
     Example::Update(Example::Where('ID = 1), array("OtherData"=>"Updated"));
 
 With the last example the where statement could be used to get the data after the record is saved like so:
