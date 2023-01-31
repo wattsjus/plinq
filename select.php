@@ -27,7 +27,8 @@ class Select {
         }
         $sql = "SELECT $select->fields FROM ";
         if(is_string($select->other)) {
-            $sql = $sql . " `$select->other` ";
+            $tableName = explode('\\', $select->other)[1];
+            $sql = $sql . " `$tableName` ";
         } else {
             $sql = $sql . \pLinq\Select::GetSqlFragment($select->other);
         }
@@ -67,7 +68,8 @@ class Select {
     public static function GetSqlFragment($other, $ignoreOther = false) {
         $keyword = get_class($other);
         if($keyword == 'pLinq\AsModel') {
-            $sql = " `$other->Table` $other->Alias ";
+            $tableName = explode('\\', $other->Table)[1];
+            $sql = " `$tableName` $other->Alias ";
             if(isset($other->Other)) {
                 $sql = $sql  . \pLinq\Select::GetSqlFragment($other->Other);
             }
