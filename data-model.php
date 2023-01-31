@@ -1,4 +1,5 @@
 <?php
+namespace pLinq;
 include_once(__DIR__.'/as.php');
 include_once(__DIR__.'/group.php');
 include_once(__DIR__.'/having.php');
@@ -9,13 +10,13 @@ include_once(__DIR__.'/limit.php');
 include_once(__DIR__.'/order.php');
 class DataModel {
     public static function As($alias = null) {
-        $as1 = new AsModel();
+        $as1 = new \pLinq\AsModel();
         $as1->Table = get_called_class();
         $as1->Alias = $alias;
         return $as1;
     }
     public static function Join($toJoin, $joinFields, $joinAlias = null) {
-        $join = new Join();
+        $join = new \pLinq\Join();
         $join->LeftAs = DataModel::As();
         $join->RightAs = $toJoin;
         $join->JoinFields = $joinFeilds;
@@ -31,8 +32,8 @@ class DataModel {
         return $where;
     }
     public static function Group($fields) {
-        $group = new Group();
-        $as1 = new AsModel();
+        $group = new \pLinq\Group();
+        $as1 = new \pLinq\AsModel();
         $as1->Table = get_called_class();
         $where->Other = $as1;
         $group = $fields;
@@ -72,12 +73,12 @@ class DataModel {
             }
             $sql = $sql . implode(',', $wheres);
         } else if($class == 'Where') {
-            $sql = $sql . Select::GetSqlFragment($conditions);
+            $sql = $sql . \pLinq\Select::GetSqlFragment($conditions);
         }
         $db->query($sql);
     }
     public static function Select($fields) {
-        return new Select(get_called_class(), $fields);
+        return new \pLinq\Select(get_called_class(), $fields);
     }
 }
 ?>
