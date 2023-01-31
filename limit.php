@@ -4,7 +4,7 @@ class Limit {
     public $Other;
     public $Rows;
     public $Offset;
-    public function Select($fields) {
+    public function select($fields) {
         return new \pLinq\Select($this, $fields);
     }
 }

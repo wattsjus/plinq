@@ -5,13 +5,13 @@ class Join {
     public $RightAs;
     public $JoinFields;
     public $JoinAlias;
-    public function Where($conditions) {
+    public function where($conditions) {
         $where = new \pLinq\Where();
         $where->Other = $this;
         $where->Conditions = $conditions;
         return $where;
     }
-    public function Join($toJoin, $joinFields, $joinAlias = null) {
+    public function join($toJoin, $joinFields, $joinAlias = null) {
         $join = new \pLinq\Join();
         $join->LeftAs = $this;
         $join->RightAs = $toJoin;
@@ -19,19 +19,19 @@ class Join {
         $join->JoinAlias = $joinAlias;
         return $join;
     }
-    public function GroupBy($fields) {
+    public function groupBy($fields) {
         $group = new \pLinq\Group();
         $group->Other = $this;
         $group->Fields = $fields;
         return $group;
     }
-    public function OrderBy($fields) {
+    public function orderBy($fields) {
         $order = new \pLinq\Order();
         $order->Fields = $fields;
         $order->Other = $this;
         return $order;
     }
-    public function Select($fields) {
+    public function select($fields) {
         return new \pLinq\Select($this, $fields);
     }
 }

@@ -8,20 +8,20 @@ class Select {
         $this->other = $other;
         $this->fields = $fields;
     }
-    function FirstOrDefault() {
+    function firstOrDefault() {
         $limit = new \pLinq\Limit();
         $limit->Other = $this->other;
         $limit->Rows = 1;
         $limit->Offset = 0;
         $this->Other = $limit;
-        $result = $this->ToArray();
+        $result = $this->toArray();
         if(count($result) > 0) {
             return $result[0];
         } else {
             return null;
         }
     }
-    private function GetSql($select) {
+    private function getSql($select) {
         if(is_array($select->fields)) {
             $select->fields = implode(',', $select->fields);
         }
@@ -30,13 +30,13 @@ class Select {
             $tableName = explode('\\', $select->other)[1];
             $sql = $sql . " `$tableName` ";
         } else {
-            $sql = $sql . \pLinq\Select::GetSqlFragment($select->other);
+            $sql = $sql . \pLinq\Select::getSqlFragment($select->other);
         }
         return $sql;
     }
-    function ToArray() {
-        $sql = $this->GetSql($this);
-        $table = \pLinq\Select::GetFirstTable($this->other);
+    function toArray() {
+        $sql = $this->getSql($this);
+        $table = \pLinq\Select::getFirstTable($this->other);
         global $dal;
         $db = $dal->getConnection($table);
         $result = $db->query($sql)->fetch_all(MYSQLI_ASSOC);
@@ -46,7 +46,7 @@ class Select {
         }
         return $return;
     }
-    public static function GetFirstTable($other) {
+    public static function getFirstTable($other) {
         if(is_string($other)) {
             return $other;
         } else {
@@ -54,32 +54,32 @@ class Select {
             if($keyword == 'pLinq\AsModel') {
                 return $other->Table;
             } else if($keyword == 'pLinq\Join') {
-                return \pLinq\Select::GetFirstTable($other->LeftAs);
+                return \pLinq\Select::getFirstTable($other->LeftAs);
             } else if($keyword == 'pLinq\Where'
                 || $keyword == 'pLinq\Group'
                 || $keyword == 'pLinq\Having'
                 || $keyword == 'pLinq\Limit'
                 || $keyword == 'pLinq\Order'
                 || $keyword == 'pLinq\Select') {
-                return \pLinq\Select::GetFirstTable($other->Other);
+                return \pLinq\Select::getFirstTable($other->Other);
             }
         }
     }
-    public static function GetSqlFragment($other, $ignoreOther = false) {
+    public static function getSqlFragment($other, $ignoreOther = false) {
         $keyword = get_class($other);
         if($keyword == 'pLinq\AsModel') {
             $tableName = explode('\\', $other->Table)[1];
             $sql = " `$tableName` $other->Alias ";
             if(isset($other->Other)) {
-                $sql = $sql  . \pLinq\Select::GetSqlFragment($other->Other);
+                $sql = $sql  . \pLinq\Select::getSqlFragment($other->Other);
             }
         } else if($keyword == 'pLinq\Join') {
-            $sql = \pLinq\Select::GetSqlFragment($other->LeftAs) . ' JOIN ';
+            $sql = \pLinq\Select::getSqlFragment($other->LeftAs) . ' JOIN ';
             if(get_class($other->RightAs) == 'AsModel') {
-                $sql = $sql . \pLinq\Select::GetSqlFragment($other->RightAs);
+                $sql = $sql . \pLinq\Select::getSqlFragment($other->RightAs);
                 $sql = $sql . ' ON ' . $other->JoinFields;
             } else if(get_class($other->RightAs) == 'Select') {
-                $innerSql = $this->GetSql($other->RightAs);
+                $innerSql = $this->getSql($other->RightAs);
                 $sql = $sql . '(' . $innerSql . ') ';
                 $sql = $sql . $other->JoinAlias . ' ';
                 $sql = $sql . ' ON ' . $other->JoinFields;
@@ -88,31 +88,31 @@ class Select {
             $sql = '';
             if(!$ignoreOther
                 && isset($other->Other)) {
-                $sql = \pLinq\Select::GetSqlFragment($other->Other);
+                $sql = \pLinq\Select::getSqlFragment($other->Other);
             }
             return "$sql WHERE $other->Conditions ";
         } else if($keyword == 'pLinq\Group') {
             $sql = '';
             if(isset($other->Other)) {
-                $sql = \pLinq\Select::GetSqlFragment($other->Other);
+                $sql = \pLinq\Select::getSqlFragment($other->Other);
             }
             return "$sql GROUP BY $other->Fields";
         } else if($keyword == 'pLinq\Having') {
             $sql = '';
             if(isset($other->Other)) {
-                $sql = \pLinq\Select::GetSqlFragment($other->Other);
+                $sql = \pLinq\Select::getSqlFragment($other->Other);
             }
             return "$sql HAVING $other->Conditions ";
         } else if($keyword == 'pLinq\Limit') {
             $sql = '';
             if(isset($other->Other)) {
-                $sql = \pLinq\Select::GetSqlFragment($other->Other);
+                $sql = \pLinq\Select::getSqlFragment($other->Other);
             }
             return "$sql LIMIT $other->Offset, $other->Rows";
         } else if($keyword == 'pLinq\Order') {
             $sql = '';
             if(isset($other->Other)) {
-                $sql = \pLinq\Select::GetSqlFragment($other->Other);
+                $sql = \pLinq\Select::getSqlFragment($other->Other);
             }
             return "$sql ORDER BY $other->Fields";
         }

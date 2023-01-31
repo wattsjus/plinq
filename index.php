@@ -10,7 +10,7 @@ class DAL {
             $tableNamesResult = $db->query($sql);
             $tableNames = $tableNamesResult->fetch_all(MYSQLI_ASSOC);
             foreach($tableNames as $tableName) {
-                $this->GenerateClass($name, $tableName['table_name']);
+                $this->generateClass($name, $tableName['table_name']);
             }
         }
     }
@@ -19,7 +19,7 @@ class DAL {
         $connection = $this->connections[$connectionName];
         return $connection;
     }
-    public function GenerateClass($connectionName, $name) {
+    public function generateClass($connectionName, $name) {
         $class = "namespace $connectionName; class $name extends \pLinq\DataModel {}";
         eval($class);
     }

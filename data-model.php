@@ -9,21 +9,21 @@ include_once(__DIR__.'/select.php');
 include_once(__DIR__.'/limit.php');
 include_once(__DIR__.'/order.php');
 class DataModel {
-    public static function As($alias = null) {
+    public static function as($alias = null) {
         $as1 = new \pLinq\AsModel();
         $as1->Table = get_called_class();
         $as1->Alias = $alias;
         return $as1;
     }
-    public static function Join($toJoin, $joinFields, $joinAlias = null) {
+    public static function join($toJoin, $joinFields, $joinAlias = null) {
         $join = new \pLinq\Join();
-        $join->LeftAs = DataModel::As();
+        $join->LeftAs = DataModel::as();
         $join->RightAs = $toJoin;
         $join->JoinFields = $joinFeilds;
         $join->JoinAlias = $joinAlias;
         return $join;
     }
-    public static function Where($conditions) {
+    public static function where($conditions) {
         $where = new Where();
         $as1 = new AsModel();
         $as1->Table = get_called_class();
@@ -31,7 +31,7 @@ class DataModel {
         $where->Conditions = $conditions;
         return $where;
     }
-    public static function Group($fields) {
+    public static function group($fields) {
         $group = new \pLinq\Group();
         $as1 = new \pLinq\AsModel();
         $as1->Table = get_called_class();
@@ -39,7 +39,7 @@ class DataModel {
         $group = $fields;
         return $group;
     }
-    public static function Insert($data) {
+    public static function insert($data) {
         $class = get_called_class();
         global $dal;
         $db = $dal->getConnection($class);
@@ -55,7 +55,7 @@ class DataModel {
         $db->query($sql);
         return $db->insert_id;
     }
-    public static function Update($conditions, $data) {
+    public static function update($conditions, $data) {
         $class = get_called_class();
         global $dal;
         $db = $dal->getConnection($class);
@@ -77,7 +77,7 @@ class DataModel {
         }
         $db->query($sql);
     }
-    public static function Select($fields) {
+    public static function select($fields) {
         return new \pLinq\Select(get_called_class(), $fields);
     }
 }

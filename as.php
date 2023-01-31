@@ -3,7 +3,7 @@ namespace pLinq;
 class AsModel {
     public $Table;
     public $Alias;
-    public function Join($other, $fields, $joinAlias = null) {
+    public function join($other, $fields, $joinAlias = null) {
         $join = new Join();
         $join->RightAs = $other;
         $join->LeftAs = $this;
@@ -11,13 +11,13 @@ class AsModel {
         $join->JoinFields = $fields;
         return $join;
     }
-    public function Where($conditions) {
+    public function where($conditions) {
         $where = new Where();
         $where->Other = $this;
         $where->Conditions = $conditions;
         return $where;
     }
-    public function Select($fields) {
+    public function select($fields) {
         return new Select($this, $fields);
     }
 }

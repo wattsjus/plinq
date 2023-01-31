@@ -3,29 +3,29 @@ namespace pLinq;
 class Where {
     public $Other;
     public $Conditions;
-    public function Select($fields) {
+    public function select($fields) {
         return new \pLinq\Select($this, $fields);
     }
-    public function GroupBy($fields) {
+    public function groupBy($fields) {
         $group = new \pLinq\Group();
         $group->Other = $this;
         $group->Fields = $fields;
         return $group;
     }
-    public function Limit($numberOfRows, $offset = 0) {
+    public function limit($numberOfRows, $offset = 0) {
         $limit = new \pLinq\Limit();
         $limit->Offset = $offset;
         $limit->Rows = $numberOfRows;
         $limit->Other = $this;
         return $limit;
     }
-    public function OrderBy($fields) {
+    public function orderBy($fields) {
         $order = new \pLinq\Order();
         $order->Fields = $fields;
         $order->Other = $this;
         return $order;
     }
-    public function Update($data) {
+    public function update($data) {
         $class = \pLinq\Select::GetFirstTable($this);
         global $dal;
         $db = $dal->getConnection($class);
